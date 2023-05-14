@@ -1,0 +1,43 @@
+10
+1
+Mohamed
+20211075
+3.5
+CS
+2
+Omar
+2021002
+4
+dl
+12
+Mohamed Ali
+3.4
+CS
+2
+Mona Samir
+3.2
+IT
+3
+Ola Maher
+1.2
+CS
+4
+Magy Madgy
+2.3
+DS
+5
+Omnia Osama
+3.6
+IS
+1
+Mohamed Ali
+3.4
+CS
+2
+Mona Samir
+3.2
+IT
+3
+Ola Maher
+1.2
+CS
