@@ -61,9 +61,6 @@ public:
     node* left;
     node* right;
 
-//______________________________________________________________________________________________________________________
-
-
 };
 
 //======================================================================================================================
@@ -317,7 +314,7 @@ public:
 //______________________________________________________________________________________________________________________
 
     void print() {
-        cout<<"_____________________________________________Student List________________________________________________";
+        cout<<"_____________________________________________Student List________________________________________________\n";
         print(root);
     }
 
@@ -328,6 +325,162 @@ public:
 
 class AVL
 {
+private:
+
+    node* root;
+
+//______________________________________________________________________________________________________________________
+
+    int getHeight(node * Node) {
+        if (Node == nullptr)
+            return 0;
+        else {
+
+            int left = getHeight(Node -> left);
+            int right = getHeight(Node -> right);
+
+            if (left > right)
+                return (left + 1);
+            else return (right + 1);
+        }
+    }
+
+//______________________________________________________________________________________________________________________
+
+    int getBalance(node * n) {
+        if (n == nullptr)
+            return -1;
+        return getHeight(n -> left) - getHeight(n -> right);
+    }
+
+//______________________________________________________________________________________________________________________
+
+    static node * rightRotation(node * n1) {
+        node * n2 = n1 -> left;
+        node * temp = n2 -> right;
+
+        n2 -> right = n1;
+        n1 -> left = temp;
+
+        return n1;
+    }
+
+//______________________________________________________________________________________________________________________
+
+    static node * leftRotation(node * n1) {
+        node * n2 = n1 -> right;
+        node * temp = n2 -> left;
+
+        n2 -> left = n1;
+        n1 -> right = temp;
+
+        return n1;
+    }
+
+//______________________________________________________________________________________________________________________
+
+    node * insert_private(node * n1, Student* student) {
+        node * n2 = new node();
+        n2->student = student;
+        n2->key = student->getId();
+        n2->left = nullptr;
+        n2->right = nullptr;
+
+        if (n1 == nullptr) {
+            n1 = n2;
+            return n1;
+        }
+
+        if (n2 -> key < n1 -> key) {
+            n1 -> left = insert_private(n1 -> left, student);
+        } else if (n2 -> key > n1 -> key) {
+            n1 -> right = insert_private(n1 -> right, student);
+        } else {
+            cout << "Student already in the list !!! Insertion failed\n";
+            return n1;
+        }
+
+        int balance = getBalance(n1);
+        // L&L
+        if (balance > 1 && n2 -> key < n1 -> left -> key)
+            return rightRotation(n1);
+
+        // R&R
+        if (balance < -1 && n2 -> key > n1 -> right -> key)
+            return leftRotation(n1);
+
+        // L&R
+        if (balance > 1 && n2 -> key > n1 -> left -> key) {
+            n1 -> left = leftRotation(n1 -> left);
+            return rightRotation(n1);
+        }
+
+        // R&L
+        if (balance < -1 && n2 -> key < n1 -> right -> key) {
+            n1 -> right = rightRotation(n1 -> right);
+            return leftRotation(n1);
+        }
+
+        return n1;
+
+    }
+
+//______________________________________________________________________________________________________________________
+
+    void print(node* Node) {
+        if (Node == nullptr) {
+            return;
+        }
+
+        print(Node->left);
+        Node->student->print();
+        print(Node->right);
+    }
+
+//______________________________________________________________________________________________________________________
+
+public:
+
+    AVL() : root(nullptr){};
+
+//______________________________________________________________________________________________________________________
+
+    void insert(Student* student)
+    {
+        root = insert_private(root,student);
+    }
+
+//______________________________________________________________________________________________________________________
+
+    void search(int id)
+    {
+        node *current = root;
+
+        while(current != nullptr)
+        {
+            if(current->key == id)
+            {
+                cout<<"Student found !!!\n";
+                current->student->print();
+                return;
+            }
+            else if(current->key > id)
+                current = current->left;
+            else
+                current = current->right;
+        }
+        cout <<"Couldn't find student :(\n";
+    }
+//______________________________________________________________________________________________________________________
+
+    void print() {
+        cout<<"_____________________________________________Student List________________________________________________\n";
+        print(root);
+    }
+
+//______________________________________________________________________________________________________________________
+    void remove(int id){};
+//______________________________________________________________________________________________________________________
 
 };
 

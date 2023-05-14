@@ -3,6 +3,7 @@
 using namespace std;
 
 BST BST_TREE;
+AVL AVL_TREE;
 
 vector<Student> loadStudent ()
 {
@@ -103,7 +104,67 @@ void BST_Menu()
     }
 }
 
-void AVL_Menu(){};
+void AVL_Menu()
+{
+    int choice = 1;
+    while(choice != 5)
+    {
+        cout <<
+             "1. Add student\n"
+             "2. Remove student\n"
+             "3. Search student\n"
+             "4. Print All (sorted by id)\n"
+             "5. Return to main menu\n";
+        cin>>choice;
+        switch (choice) {
+            case 1 :
+            {
+                string name , dept;
+                int id;
+                double gpa;
+                cout<<"Enter Student's ID:\n";
+                cin>>id;
+                cout<<"Enter Student's Name:\n";
+                cin.ignore();
+                getline(cin,name);
+                cout<<"Enter Student's GPA:\n";
+                cin>>gpa;
+                cout<<"Enter Student's Department:\n";
+                cin.ignore();
+                getline(cin,dept);
+                Student student (id,name,gpa,dept);
+                AVL_TREE.insert(&student);
+                break;
+            }
+
+            case 2:
+            {
+                int id;
+                cout<<"Enter Student's ID:\n";
+                cin>>id;
+                AVL_TREE.remove(id);
+                break;
+            }
+
+            case 3:
+            {
+                int id;
+                cout<<"Enter Student's ID:\n";
+                cin>>id;
+                AVL_TREE.search(id);
+                break;
+            }
+
+            case 4:
+            {
+                AVL_TREE.print();
+                break;
+            }
+
+            default:;
+        }
+    }
+}
 void MinHeap_Menu(){};
 void MaxHeap_Menu(){};
 
@@ -145,6 +206,7 @@ int main() {
     for(auto &i : Students)
     {
         BST_TREE.insert(&i);
+        AVL_TREE.insert(&i);
     }
     MainMenu();
 }
