@@ -1,5 +1,5 @@
+// created by : Mohamed Ahmed
 #include <bits/stdc++.h>
-
 #include <utility>
 using namespace std;
 
@@ -40,6 +40,23 @@ public:
 
 //______________________________________________________________________________________________________________________
 
+    [[nodiscard]] double getGPA() const{
+        return this->gpa;
+    }
+
+//______________________________________________________________________________________________________________________
+
+    [[nodiscard]] string getName() const{
+        return this->name;
+    }
+
+//______________________________________________________________________________________________________________________
+
+    [[nodiscard]] string getDepartment() const{
+        return this->dept;
+    }
+
+//______________________________________________________________________________________________________________________
     void print () const{
         cout<< "Student's ID : " << this->id<<endl;
         cout<<"Student's Name : " <<this->name<<endl;
@@ -89,14 +106,14 @@ private:
 //______________________________________________________________________________________________________________________
 
     Student* Min_BST_private (node* Node){
-            if(root != nullptr)
+        if(root != nullptr)
+        {
+            if(Node->left != nullptr)
             {
-                if(Node->left != nullptr)
-                {
-                    return (Min_BST_private(Node->left));
-                }
+                return (Min_BST_private(Node->left));
             }
-            return Node->student;
+        }
+        return Node->student;
     }
 
 //______________________________________________________________________________________________________________________
@@ -121,7 +138,7 @@ private:
                 delete temp;
             }
 
-            // 1 child
+                // 1 child
             else if(compare->left != nullptr and compare->right == nullptr)
             {
                 temp =compare;
@@ -147,7 +164,7 @@ private:
                 delete compare;
             }
 
-            // 2 children.
+                // 2 children.
             else {
                 Min_Right = Min_BST_private(compare->right)->getId();
                 Student* student = Min_BST_private(compare->right);
@@ -180,7 +197,7 @@ private:
                     delete temp;
                     cout<<"Student removed successfully!!!\n";
                 }
-                // 1 child
+                    // 1 child
                 else if(root->left == nullptr and root->right != nullptr)
                 {
                     root = root->right;
@@ -195,7 +212,7 @@ private:
                     cout<<"Student removed successfully!!!\n";
                 }
 
-                // 2 children
+                    // 2 children
                 else {
                     Min_Right = Min_BST_private(root->right)->getId();
                     Student* student = Min_BST_private(root->right);
@@ -389,53 +406,122 @@ private:
 //______________________________________________________________________________________________________________________
 
     node * insert_private(node * n1, Student* student) {
-            if (n1 == nullptr) {
-                return new node(student->getId(), student);
-            }
+        if (n1 == nullptr) {
+            return new node(student->getId(), student);
+        }
 
-            if (student->getId() < n1->key) {
-                n1->left = insert_private(n1->left, student);
-            }
+        if (student->getId() < n1->key) {
+            n1->left = insert_private(n1->left, student);
+        }
 
-            else if (student->getId() > n1->key) {
-                n1->right = insert_private(n1->right, student);
-            }
+        else if (student->getId() > n1->key) {
+            n1->right = insert_private(n1->right, student);
+        }
 
-            else {
-                cout << "The Student is already in the list -- Insertion failed :(" << endl;
-                return n1;
-            }
-
-            // Update height of the ancestor node
-            n1->height = 1 + max(getHeight(n1->left), getHeight(n1->right));
-
-            // Check balance factor
-            int balanceFactor = getBalance(n1);
-
-            // Left Left Case
-            if (balanceFactor > 1 && student->getId() < n1->left->key) {
-                return rightRotation(n1);
-            }
-
-            // Right Right Case
-            if (balanceFactor < -1 && student->getId() > n1->right->key) {
-                return leftRotation(n1);
-            }
-
-            // Left Right Case
-            if (balanceFactor > 1 && student->getId() > n1->left->key) {
-                n1->left = leftRotation(n1->left);
-                return rightRotation(n1);
-            }
-
-            // Right Left Case
-            if (balanceFactor < -1 && student->getId() < n1->right->key) {
-                n1->right = rightRotation(n1->right);
-                return leftRotation(n1);
-            }
-
+        else {
+            cout << "The Student is already in the list -- Insertion failed :(" << endl;
             return n1;
+        }
 
+        // Update height of the ancestor node
+        n1->height = 1 + max(getHeight(n1->left), getHeight(n1->right));
+
+        // Check balance factor
+        int balanceFactor = getBalance(n1);
+
+        // Left Left Case
+        if (balanceFactor > 1 && student->getId() < n1->left->key) {
+            return rightRotation(n1);
+        }
+
+        // Right Right Case
+        if (balanceFactor < -1 && student->getId() > n1->right->key) {
+            return leftRotation(n1);
+        }
+
+        // Left Right Case
+        if (balanceFactor > 1 && student->getId() > n1->left->key) {
+            n1->left = leftRotation(n1->left);
+            return rightRotation(n1);
+        }
+
+        // Right Left Case
+        if (balanceFactor < -1 && student->getId() < n1->right->key) {
+            n1->right = rightRotation(n1->right);
+            return leftRotation(n1);
+        }
+
+        return n1;
+
+    }
+
+//______________________________________________________________________________________________________________________
+    node* deleteStudent(node* Node, int id) {
+        if (Node == nullptr) {
+            cout << "Tree is empty\n";
+            return Node;
+        }
+
+        if (id < Node->key) {
+            Node->left = deleteStudent(Node->left, id);
+        }
+        else if (id > Node->key) {
+            Node->right = deleteStudent(Node->right, id);
+        }
+        else {
+            if (Node->left == nullptr && Node->right == nullptr) {
+                delete Node;
+                Node = nullptr;
+            }
+            else if (Node->left == nullptr) {
+                node* temp = Node;
+                Node = Node->right;
+                delete temp;
+            }
+            else if (Node->right == nullptr) {
+                node* temp = Node;
+                Node = Node->left;
+                delete temp;
+            }
+            else {
+                node* pre = Node->left;
+                while (pre->right != nullptr) {
+                    pre = pre->right;
+                }
+
+                Node->key = pre->key;
+                Node->student = pre->student;
+
+                Node->left = deleteStudent(Node->left, pre->key);
+            }
+        }
+
+        if (Node == nullptr) {
+            return Node;
+        }
+
+        Node->height = 1 + max(getHeight(Node->left), getHeight(Node->right));
+        int balance = getBalance(Node);
+
+        if (balance > 1 && getBalance(Node->left) >= 0) {
+            return rightRotation(Node);
+        }
+
+        if (balance > 1 && getBalance(Node->left) < 0) {
+            Node->left = leftRotation(Node->left);
+            return rightRotation(Node);
+        }
+
+        if (balance < -1 && getBalance(Node->right) <= 0) {
+            return leftRotation(Node);
+        }
+
+        if (balance < -1 && getBalance(Node->right) > 0) {
+            Node->right = rightRotation(Node->right);
+            return leftRotation(Node);
+        }
+
+        return Node;
     }
 
 //______________________________________________________________________________________________________________________
@@ -492,7 +578,11 @@ public:
     }
 
 //______________________________________________________________________________________________________________________
-    void remove(int id){};
+
+    void remove (int id)
+    {
+        deleteStudent(root,id);
+    }
 //______________________________________________________________________________________________________________________
 
 };

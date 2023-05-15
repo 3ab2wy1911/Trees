@@ -1,9 +1,12 @@
-#include <bits/stdc++.h>
-#include "Trees.cpp"
+// created by : Mohamed Ahmed
+
+#include "Header.h"
+
 using namespace std;
 
 BST BST_TREE;
 AVL AVL_TREE;
+
 
 vector<Student> loadStudent ()
 {
@@ -165,21 +168,86 @@ void AVL_Menu()
         }
     }
 }
-void MinHeap_Menu(){};
-void MaxHeap_Menu(){};
+
+void MinHeap_Menu()
+{
+    int NumberOfStudents = students();
+    HeapStudent* StudentsList = new HeapStudent[NumberOfStudents];
+    loadStudents(StudentsList);
+    while (true) {
+        int choice1;
+        cout << "Choose one of the following options:\n1 - Add student\n2 - Print All (sorted by gpa)\n3 - Main Menu\n";
+        cin >> choice1;
+        if (choice1 == 1) {
+            string name, department;
+            double GPA;
+            int id;
+            cout << "Enter Student's ID: ";
+            cin >> id;
+            cout << "\nEnter Student's Name: ";
+            cin.ignore();
+            getline(cin, name);
+            cout << "\nEnter Student's GPA: ";
+            cin >> GPA;
+            cout << "\nEnter Student's Department: ";
+            cin >> department;
+            HeapStudent student(id, name, GPA, department);
+            StudentsList = addStudent(StudentsList, NumberOfStudents, student);
+            NumberOfStudents++;
+            sortMin(StudentsList, NumberOfStudents, 0);
+            printStudents(StudentsList, NumberOfStudents);
+            cout << endl;
+        }
+        else if (choice1 == 2) {
+            sortMin(StudentsList, NumberOfStudents, 0);
+            printStudents(StudentsList, NumberOfStudents);
+            cout << endl;
+        }
+        else break;
+    }
+};
+
+
+void MaxHeap_Menu(){
+    int choice1;
+    int NumberOfStudents = students();
+    HeapStudent* StudentsList = new HeapStudent[NumberOfStudents];
+    loadStudents(StudentsList);
+    while (true) {
+        cout << "Choose one of the following options:\n1 - Add student\n2 - Print All (sorted by gpa)\n3 - Main Menu\n";
+        cin >> choice1;
+        if (choice1 == 1) {
+            string name, department; double GPA; int id;
+            cout << "Enter Student's ID: "; cin >> id;
+            cout << "\nEnter Student's Name: "; cin.ignore(); getline(cin, name);
+            cout << "\nEnter Student's GPA: "; cin >> GPA;
+            cout << "\nEnter Student's Department: "; cin >> department;
+            HeapStudent student(id, name, GPA, department);
+            StudentsList = addStudent(StudentsList, NumberOfStudents, student);
+            NumberOfStudents++;
+            sortMax(StudentsList, NumberOfStudents, 0);
+            printStudents(StudentsList, NumberOfStudents);
+        }
+        else if (choice1 == 2) {
+            sortMax(StudentsList, NumberOfStudents, 0);
+            printStudents(StudentsList, NumberOfStudents);
+        }
+        else break;
+    }
+}
 
 void MainMenu () {
     int choice = -1;
     while (choice!=5)
     {
-    cout <<
-         "Choose Data Structure:\n"
-         "1.BST\n"
-         "2.AVL\n"
-         "3.Min Heap\n"
-         "4.Max Heap\n"
-         "5.Exit\n";
-    cin >> choice;
+        cout <<
+             "Choose Data Structure:\n"
+             "1.BST\n"
+             "2.AVL\n"
+             "3.Min Heap\n"
+             "4.Max Heap\n"
+             "5.Exit\n";
+        cin >> choice;
         switch (choice) {
             case 1 :
                 BST_Menu();
