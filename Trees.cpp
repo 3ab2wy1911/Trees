@@ -121,23 +121,25 @@ private:
             // 1 child
             else if(compare->left != nullptr and compare->right == nullptr)
             {
-                if(left)
-                {
-                    Node->left = compare->right;
-                }
-                else {
-                    Node->right = compare->right;
-                }
-                delete compare;
-            }
-            else if(compare->left == nullptr and compare->right != nullptr)
-            {
+                temp =compare;
                 if(left)
                 {
                     Node->left = compare->left;
                 }
                 else {
                     Node->right = compare->left;
+                }
+                delete compare;
+            }
+            else if(compare->left == nullptr and compare->right != nullptr)
+            {
+                temp =compare;
+                if(left)
+                {
+                    Node->left = compare->right;
+                }
+                else {
+                    Node->right = compare->right;
                 }
                 delete compare;
             }
