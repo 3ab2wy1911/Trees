@@ -60,8 +60,11 @@ public:
     Student* student;
     node* left;
     node* right;
-
+    int height = 1 ;
+    node(){};
+    node(int id, Student* student) : key(id), student(student), left(nullptr), right(nullptr), height(1) {};
 };
+
 
 //======================================================================================================================
 
@@ -333,23 +336,16 @@ private:
 
 //______________________________________________________________________________________________________________________
 
-    int getHeight(node * Node) {
-        if (Node == nullptr)
+    static int getHeight(node* Node) {
+        if (Node == nullptr) {
             return 0;
-        else {
-
-            int left = getHeight(Node -> left);
-            int right = getHeight(Node -> right);
-
-            if (left > right)
-                return (left + 1);
-            else return (right + 1);
         }
+        return Node->height;
     }
 
 //______________________________________________________________________________________________________________________
 
-    int getBalance(node * n) {
+    static int getBalance(node * n) {
         if (n == nullptr)
             return -1;
         return getHeight(n -> left) - getHeight(n -> right);
@@ -357,73 +353,88 @@ private:
 
 //______________________________________________________________________________________________________________________
 
-    static node * rightRotation(node * n1) {
-        node * n2 = n1 -> left;
-        node * temp = n2 -> right;
+    static node* rightRotation(node* y) {
+        node* x = y->left;
+        node* T2 = x->right;
 
-        n2 -> right = n1;
-        n1 -> left = temp;
+        // Perform rotation
+        x->right = y;
+        y->left = T2;
 
-        return n1;
+        // Update heights
+        y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+        x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+
+        return x;
     }
 
 //______________________________________________________________________________________________________________________
 
-    static node * leftRotation(node * n1) {
-        node * n2 = n1 -> right;
-        node * temp = n2 -> left;
+    static node* leftRotation(node* x) {
+        node* y = x->right;
+        node* T2 = y->left;
 
-        n2 -> left = n1;
-        n1 -> right = temp;
+        // Perform rotation
+        y->left = x;
+        x->right = T2;
 
-        return n1;
+        // Update heights
+        x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+        y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+
+        return y;
     }
+
 
 //______________________________________________________________________________________________________________________
 
     node * insert_private(node * n1, Student* student) {
-        node * n2 = new node();
-        n2->student = student;
-        n2->key = student->getId();
-        n2->left = nullptr;
-        n2->right = nullptr;
+            if (n1 == nullptr) {
+                return new node(student->getId(), student);
+            }
 
-        if (n1 == nullptr) {
-            n1 = n2;
+            if (student->getId() < n1->key) {
+                n1->left = insert_private(n1->left, student);
+            }
+
+            else if (student->getId() > n1->key) {
+                n1->right = insert_private(n1->right, student);
+            }
+
+            else {
+                cout << "The Student is already in the list -- Insertion failed :(" << endl;
+                return n1;
+            }
+
+            // Update height of the ancestor node
+            n1->height = 1 + max(getHeight(n1->left), getHeight(n1->right));
+
+            // Check balance factor
+            int balanceFactor = getBalance(n1);
+
+            // Left Left Case
+            if (balanceFactor > 1 && student->getId() < n1->left->key) {
+                return rightRotation(n1);
+            }
+
+            // Right Right Case
+            if (balanceFactor < -1 && student->getId() > n1->right->key) {
+                return leftRotation(n1);
+            }
+
+            // Left Right Case
+            if (balanceFactor > 1 && student->getId() > n1->left->key) {
+                n1->left = leftRotation(n1->left);
+                return rightRotation(n1);
+            }
+
+            // Right Left Case
+            if (balanceFactor < -1 && student->getId() < n1->right->key) {
+                n1->right = rightRotation(n1->right);
+                return leftRotation(n1);
+            }
+
             return n1;
-        }
-
-        if (n2 -> key < n1 -> key) {
-            n1 -> left = insert_private(n1 -> left, student);
-        } else if (n2 -> key > n1 -> key) {
-            n1 -> right = insert_private(n1 -> right, student);
-        } else {
-            cout << "Student already in the list !!! Insertion failed\n";
-            return n1;
-        }
-
-        int balance = getBalance(n1);
-        // L&L
-        if (balance > 1 && n2 -> key < n1 -> left -> key)
-            return rightRotation(n1);
-
-        // R&R
-        if (balance < -1 && n2 -> key > n1 -> right -> key)
-            return leftRotation(n1);
-
-        // L&R
-        if (balance > 1 && n2 -> key > n1 -> left -> key) {
-            n1 -> left = leftRotation(n1 -> left);
-            return rightRotation(n1);
-        }
-
-        // R&L
-        if (balance < -1 && n2 -> key < n1 -> right -> key) {
-            n1 -> right = rightRotation(n1 -> right);
-            return leftRotation(n1);
-        }
-
-        return n1;
 
     }
 
