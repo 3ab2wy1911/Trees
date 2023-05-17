@@ -1,4 +1,4 @@
-## TREES - Data Structure Assignment 3 - FCAI-CU 
+## `#00GG00` TREES - Data Structure Assignment 3 - FCAI-CU 
 ## BY [Mohamed Ahmed(3ab2awy)](https://github.com/3ab2wy1911) - [Omar Mohammad](https://github.com/OmarMuhamad)
 ### An application which stores the data of students in ***binary search tree***, ***AVL trees***, ***MAX-HEAP*** and ***MIN-HEAP***.
 ## 1. Binary Search Tree (BST):
